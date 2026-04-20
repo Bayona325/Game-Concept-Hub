@@ -7,66 +7,214 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <h1 class="logo">🎮 Game Concept Hub</h1>
-                <p class="tagline">Organiza y desarrolla tus ideas de videojuegos</p>
+    <!-- Application Layout -->
+    <div class="app-container">
+        <!-- Header Principal -->
+        <header class="app-header">
+            <div class="header-wrapper">
+                <div class="logo-section">
+                    <h1 class="logo">🎮 Game Concept Hub</h1>
+                    <p class="tagline">Organiza y desarrolla tus ideas de videojuegos</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="btnCreateGame">
+                        <span class="icon">+</span> Nuevo Juego
+                    </button>
+                </div>
             </div>
         </header>
 
-        <!-- Navigation -->
-        <nav class="navbar">
-            <div class="nav-content">
-                <button class="btn btn-primary" id="btnCreateGame">
-                    <span class="icon">+</span> Nuevo Juego
-                </button>
-                <div class="search-box">
-                    <input 
-                        type="text" 
-                        id="searchInput" 
-                        class="search-input" 
-                        placeholder="Buscar juegos..."
-                    >
-                    <button class="btn btn-search" id="btnSearch">Buscar</button>
-                </div>
-            </div>
-        </nav>
+        <!-- Main Layout (Sidebar + Content) -->
+        <div class="app-layout">
+            <!-- Sidebar Izquierda: Búsqueda y Lista de Juegos -->
+            <aside class="sidebar">
+                <div class="sidebar-content">
+                    <!-- Buscador -->
+                    <div class="search-section">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            class="search-input" 
+                            placeholder="🔍 Buscar juegos..."
+                        >
+                        <p class="search-hint">Escribe para filtrar juegos</p>
+                    </div>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Stats -->
-            <section class="stats-section">
-                <div class="stat-card">
-                    <h3>Total de Juegos</h3>
-                    <p class="stat-value" id="totalGames">0</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Géneros</h3>
-                    <p class="stat-value" id="totalGenres">0</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Categorías</h3>
-                    <p class="stat-value" id="totalCategories">0</p>
-                </div>
-            </section>
+                    <!-- Stats -->
+                    <div class="stats-compact">
+                        <div class="stat-mini">
+                            <span class="stat-label">Juegos</span>
+                            <span class="stat-number" id="totalGames">0</span>
+                        </div>
+                        <div class="stat-mini">
+                            <span class="stat-label">Géneros</span>
+                            <span class="stat-number" id="totalGenres">0</span>
+                        </div>
+                        <div class="stat-mini">
+                            <span class="stat-label">Categorías</span>
+                            <span class="stat-number" id="totalCategories">0</span>
+                        </div>
+                    </div>
 
-            <!-- Games Grid -->
-            <section class="games-section">
-                <h2>Tus Juegos</h2>
-                <div class="games-grid" id="gamesGrid">
-                    <div class="empty-state">
-                        <p>📭 No hay juegos registrados aún</p>
-                        <p class="empty-subtitle">¡Crea tu primer juego para comenzar!</p>
+                    <!-- Lista de Juegos -->
+                    <div class="games-list-section">
+                        <h3 class="list-title">Tus Juegos</h3>
+                        <div class="games-list" id="gamesList">
+                            <div class="empty-list">
+                                <p>📭 No hay juegos</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </section>
-        </main>
+            </aside>
+
+            <!-- Contenido Principal -->
+            <main class="main-content">
+                <!-- Vista de Inicio (Welcome) -->
+                <section class="view" id="welcomeView">
+                    <div class="welcome-container">
+                        <div class="welcome-content">
+                            <h2>👋 Bienvenido a Game Concept Hub</h2>
+                            <p>Organiza y desarrolla tus ideas de videojuegos de forma intuitiva.</p>
+                            <div class="welcome-features">
+                                <div class="feature">
+                                    <span class="feature-icon">💡</span>
+                                    <div>
+                                        <h4>Crea Ideas</h4>
+                                        <p>Registra tus conceptos de juegos</p>
+                                    </div>
+                                </div>
+                                <div class="feature">
+                                    <span class="feature-icon">📝</span>
+                                    <div>
+                                        <h4>Organiza Secciones</h4>
+                                        <p>Estructura tu idea por temas</p>
+                                    </div>
+                                </div>
+                                <div class="feature">
+                                    <span class="feature-icon">🔍</span>
+                                    <div>
+                                        <h4>Busca Rápido</h4>
+                                        <p>Encuentra tus juegos al instante</p>
+                                    </div>
+                                </div>
+                                <div class="feature">
+                                    <span class="feature-icon">🎮</span>
+                                    <div>
+                                        <h4>Gestiona Todo</h4>
+                                        <p>Edita, elimina y visualiza fácilmente</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-large" id="btnGoCreate">
+                                <span class="icon">+</span> Crear Primer Juego
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Vista de Detalle del Juego -->
+                <section class="view" id="detailView">
+                    <!-- Cabecera del Juego (Título + Tags) -->
+                    <header class="game-detail-header">
+                        <div class="game-header-content">
+                            <div class="back-button-section">
+                                <button class="btn-back" id="btnBack">← Regresar al inicio</button>
+                            </div>
+                            <h1 class="game-title" id="gameTitle">Nombre del Juego</h1>
+                            <p class="game-genre" id="gameGenreDisplay">Género</p>
+                            <div class="tags-container" id="tagsContainer">
+                                <!-- Tags dinámicos -->
+                            </div>
+                        </div>
+                    </header>
+
+                    <!-- Barra de Navegación por Secciones (Tabs) -->
+                    <nav class="sections-nav">
+                        <button class="section-tab active" data-section="info">
+                            📋 Información
+                        </button>
+                        <button class="section-tab" data-section="gameplay">
+                            🎮 Gameplay
+                        </button>
+                        <button class="section-tab" data-section="story">
+                            📖 Historia
+                        </button>
+                        <button class="section-tab" data-section="visuals">
+                            🎨 Visuales
+                        </button>
+                        <button class="section-tab" data-section="sections">
+                            📑 Todas las Secciones
+                        </button>
+                    </nav>
+
+                    <!-- Cuerpo Dinámico (Contenido de Sección) -->
+                    <div class="game-content-area">
+                        <!-- Sección: Información General -->
+                        <section class="content-section active" id="infoSection">
+                            <h2>Información General</h2>
+                            <div class="info-grid">
+                                <div class="info-card">
+                                    <h3>Descripción Completa</h3>
+                                    <p id="gameDescriptionDisplay" class="description-text">Sin descripción</p>
+                                </div>
+                                <div class="info-card">
+                                    <h3>Categorías</h3>
+                                    <div id="categoriesDisplay" class="items-list">
+                                        <p class="empty-text">Sin categorías</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-actions-game">
+                                <button class="btn btn-secondary" id="btnEditInfo">✏️ Editar Juego</button>
+                                <button class="btn btn-danger" id="btnDeleteGame">🗑️ Eliminar</button>
+                            </div>
+                        </section>
+
+                        <!-- Sección: Gameplay -->
+                        <section class="content-section" id="gameplaySection">
+                            <h2>Gameplay</h2>
+                            <div class="section-content" id="gameplayContent">
+                                <p class="empty-text">No hay sección de Gameplay agregada aún.</p>
+                                <button class="btn btn-primary" id="btnAddGameplay">+ Añadir Gameplay</button>
+                            </div>
+                        </section>
+
+                        <!-- Sección: Historia -->
+                        <section class="content-section" id="storySection">
+                            <h2>Historia</h2>
+                            <div class="section-content" id="storyContent">
+                                <p class="empty-text">No hay sección de Historia agregada aún.</p>
+                                <button class="btn btn-primary" id="btnAddStory">+ Añadir Historia</button>
+                            </div>
+                        </section>
+
+                        <!-- Sección: Visuales -->
+                        <section class="content-section" id="visualsSection">
+                            <h2>Visuales</h2>
+                            <div class="section-content" id="visualsContent">
+                                <p class="empty-text">No hay sección de Visuales agregada aún.</p>
+                                <button class="btn btn-primary" id="btnAddVisuals">+ Añadir Visuales</button>
+                            </div>
+                        </section>
+
+                        <!-- Sección: Todas las Secciones -->
+                        <section class="content-section" id="allSectionsSection">
+                            <h2>Todas las Secciones</h2>
+                            <div id="allSectionsContainer" class="all-sections-grid">
+                                <p class="empty-text">Sin secciones agregadas aún.</p>
+                            </div>
+                            <button class="btn btn-primary btn-large" id="btnAddNewSection">+ Añadir Nueva Sección</button>
+                        </section>
+                    </div>
+                </section>
+            </main>
+        </div>
     </div>
 
     <!-- Modal: Crear/Editar Juego -->
     <div id="gameModal" class="modal">
+        <div class="modal-overlay" id="modalOverlay"></div>
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Nuevo Juego</h2>
@@ -138,30 +286,13 @@
         </div>
     </div>
 
-    <!-- Modal: Detalles del Juego -->
-    <div id="detailsModal" class="modal">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h2 id="detailsTitle">Detalles del Juego</h2>
-                <button class="btn-close" id="btnCloseDetailsModal">&times;</button>
-            </div>
-            <div class="modal-body" id="detailsBody">
-                <!-- Contenido dinámico -->
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-secondary" id="btnEditGame">Editar</button>
-                <button class="btn btn-danger" id="btnDeleteGame">Eliminar</button>
-                <button class="btn btn-secondary" id="btnCloseDetails">Cerrar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal: Añadir Secciones -->
-    <div id="sectionsModal" class="modal">
+    <!-- Modal: Añadir/Editar Sección -->
+    <div id="sectionModal" class="modal">
+        <div class="modal-overlay" id="sectionModalOverlay"></div>
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Añadir Sección</h2>
-                <button class="btn-close" id="btnCloseSectionsModal">&times;</button>
+                <h2 id="sectionModalTitle">Añadir Sección</h2>
+                <button class="btn-close" id="btnCloseSectionModal">&times;</button>
             </div>
             <form id="sectionForm" class="section-form">
                 <div class="form-group">
@@ -200,7 +331,7 @@
 
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" id="btnCancelSection">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Añadir Sección</button>
+                    <button type="submit" class="btn btn-primary">Guardar Sección</button>
                 </div>
             </form>
         </div>

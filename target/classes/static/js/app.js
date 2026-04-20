@@ -3,39 +3,75 @@ const API_BASE_URL = '/api';
 const API_GAMES = `${API_BASE_URL}/games`;
 const API_AUTH = `${API_BASE_URL}/auth`;
 
-// ===================== ESTADO DE LA APLICACIÓN =====================
-let appState = {
+// ===================== ESTADO GLOBAL =====================
+const appState = {
     games: [],
     currentGame: null,
+    currentSection: 'info',
     editingGameId: null,
-    users: []
+    searchQuery: ''
 };
 
 // ===================== ELEMENTOS DEL DOM =====================
 const elements = {
-    // Botones
+    // Vistas
+    welcomeView: document.getElementById('welcomeView'),
+    detailView: document.getElementById('detailView'),
+    
+    // Sidebar
+    searchInput: document.getElementById('searchInput'),
+    gamesList: document.getElementById('gamesList'),
+    totalGames: document.getElementById('totalGames'),
+    totalGenres: document.getElementById('totalGenres'),
+    totalCategories: document.getElementById('totalCategories'),
+    
+    // Botones principales
     btnCreateGame: document.getElementById('btnCreateGame'),
-    btnSearch: document.getElementById('btnSearch'),
-    btnCloseGameModal: document.getElementById('btnCloseGameModal'),
-    btnCancelGame: document.getElementById('btnCancelGame'),
-    btnCloseDetailsModal: document.getElementById('btnCloseDetailsModal'),
-    btnEditGame: document.getElementById('btnEditGame'),
+    btnGoCreate: document.getElementById('btnGoCreate'),
+    btnBack: document.getElementById('btnBack'),
+    
+    // Detail header
+    gameTitle: document.getElementById('gameTitle'),
+    gameGenreDisplay: document.getElementById('gameGenreDisplay'),
+    tagsContainer: document.getElementById('tagsContainer'),
+    
+    // Section tabs
+    sectionTabs: document.querySelectorAll('.section-tab'),
+    
+    // Content sections
+    infoSection: document.getElementById('infoSection'),
+    gameplaySection: document.getElementById('gameplaySection'),
+    storySection: document.getElementById('storySection'),
+    visualsSection: document.getElementById('visualsSection'),
+    allSectionsSection: document.getElementById('allSectionsSection'),
+    
+    // Content displays
+    gameDescriptionDisplay: document.getElementById('gameDescriptionDisplay'),
+    categoriesDisplay: document.getElementById('categoriesDisplay'),
+    gameplayContent: document.getElementById('gameplayContent'),
+    storyContent: document.getElementById('storyContent'),
+    visualsContent: document.getElementById('visualsContent'),
+    allSectionsContainer: document.getElementById('allSectionsContainer'),
+    
+    // Action buttons
+    btnEditInfo: document.getElementById('btnEditInfo'),
     btnDeleteGame: document.getElementById('btnDeleteGame'),
-    btnCloseDetails: document.getElementById('btnCloseDetails'),
-    btnCloseSectionsModal: document.getElementById('btnCloseSectionsModal'),
-    btnCancelSection: document.getElementById('btnCancelSection'),
+    btnAddGameplay: document.getElementById('btnAddGameplay'),
+    btnAddStory: document.getElementById('btnAddStory'),
+    btnAddVisuals: document.getElementById('btnAddVisuals'),
+    btnAddNewSection: document.getElementById('btnAddNewSection'),
     
     // Modales
     gameModal: document.getElementById('gameModal'),
-    detailsModal: document.getElementById('detailsModal'),
-    sectionsModal: document.getElementById('sectionsModal'),
-    
-    // Formularios
+    sectionModal: document.getElementById('sectionModal'),
+    btnCloseGameModal: document.getElementById('btnCloseGameModal'),
+    btnCloseSectionModal: document.getElementById('btnCloseSectionModal'),
+    btnCancelGame: document.getElementById('btnCancelGame'),
+    btnCancelSection: document.getElementById('btnCancelSection'),
     gameForm: document.getElementById('gameForm'),
     sectionForm: document.getElementById('sectionForm'),
     
-    // Inputs
-    searchInput: document.getElementById('searchInput'),
+    // Form inputs
     gameName: document.getElementById('gameName'),
     gameGenre: document.getElementById('gameGenre'),
     gameDescription: document.getElementById('gameDescription'),
@@ -45,17 +81,12 @@ const elements = {
     sectionType: document.getElementById('sectionType'),
     sectionContent: document.getElementById('sectionContent'),
     
-    // Contenedores
-    gamesGrid: document.getElementById('gamesGrid'),
-    toast: document.getElementById('toast'),
+    // Modal titles
     modalTitle: document.getElementById('modalTitle'),
-    detailsTitle: document.getElementById('detailsTitle'),
-    detailsBody: document.getElementById('detailsBody'),
+    sectionModalTitle: document.getElementById('sectionModalTitle'),
     
-    // Stats
-    totalGames: document.getElementById('totalGames'),
-    totalGenres: document.getElementById('totalGenres'),
-    totalCategories: document.getElementById('totalCategories')
+    // Toast
+    toast: document.getElementById('toast')
 };
 
 // ===================== INICIALIZACIÓN =====================
@@ -63,47 +94,90 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Game Concept Hub cargado');
     loadGames();
     setupEventListeners();
+    handleRouteChange();
+    
+    // Escuchar cambios de URL
+    window.addEventListener('hashchange', handleRouteChange);
 });
 
 // ===================== EVENT LISTENERS =====================
 function setupEventListeners() {
+    // Búsqueda
+    elements.searchInput.addEventListener('input', handleSearch);
+    
     // Crear juego
     elements.btnCreateGame.addEventListener('click', openCreateGameModal);
-    elements.gameForm.addEventListener('submit', handleGameFormSubmit);
-    elements.btnCloseGameModal.addEventListener('click', closeGameModal);
-    elements.btnCancelGame.addEventListener('click', closeGameModal);
+    elements.btnGoCreate.addEventListener('click', openCreateGameModal);
     
-    // Búsqueda
-    elements.btnSearch.addEventListener('click', handleSearch);
-    elements.searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleSearch();
+    // Regreso
+    elements.btnBack.addEventListener('click', goToWelcome);
+    
+    // Tabs de secciones
+    elements.sectionTabs.forEach(tab => {
+        tab.addEventListener('click', () => switchSection(tab.dataset.section));
     });
     
-    // Detalles
-    elements.btnCloseDetailsModal.addEventListener('click', closeDetailsModal);
-    elements.btnCloseDetails.addEventListener('click', closeDetailsModal);
-    elements.btnEditGame.addEventListener('click', editCurrentGame);
+    // Editar / Eliminar
+    elements.btnEditInfo.addEventListener('click', editCurrentGame);
     elements.btnDeleteGame.addEventListener('click', deleteCurrentGame);
     
-    // Secciones
+    // Añadir secciones
+    elements.btnAddGameplay.addEventListener('click', () => openSectionModal('GAMEPLAY'));
+    elements.btnAddStory.addEventListener('click', () => openSectionModal('STORY'));
+    elements.btnAddVisuals.addEventListener('click', () => openSectionModal('VISUALS'));
+    elements.btnAddNewSection.addEventListener('click', openSectionModal);
+    
+    // Formularios
+    elements.gameForm.addEventListener('submit', handleGameFormSubmit);
     elements.sectionForm.addEventListener('submit', handleSectionFormSubmit);
-    elements.btnCloseSectionsModal.addEventListener('click', closeSectionsModal);
-    elements.btnCancelSection.addEventListener('click', closeSectionsModal);
+    
+    // Cerrar modales
+    elements.btnCloseGameModal.addEventListener('click', closeGameModal);
+    elements.btnCloseSectionModal.addEventListener('click', closeSectionModal);
+    elements.btnCancelGame.addEventListener('click', closeGameModal);
+    elements.btnCancelSection.addEventListener('click', closeSectionModal);
     
     // Cerrar modales con ESC
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeGameModal();
-            closeDetailsModal();
-            closeSectionsModal();
+            closeSectionModal();
         }
     });
+}
+
+// ===================== RUTEO (SPA) =====================
+function handleRouteChange() {
+    const hash = window.location.hash.slice(1);
+    
+    if (hash.startsWith('game/')) {
+        const gameId = parseInt(hash.split('/')[1]);
+        const game = appState.games.find(g => g.id === gameId);
+        
+        if (game) {
+            showGameDetail(game);
+        } else {
+            goToWelcome();
+        }
+    } else {
+        showWelcome();
+    }
+}
+
+function showWelcome() {
+    elements.welcomeView.classList.add('active');
+    elements.detailView.classList.remove('active');
+    appState.currentGame = null;
+}
+
+function goToWelcome() {
+    window.location.hash = '';
+    showWelcome();
 }
 
 // ===================== CARGAR JUEGOS =====================
 async function loadGames() {
     try {
-        showToast('Cargando juegos...', 'info');
         const response = await fetch(`${API_GAMES}/search?query=`);
         
         if (!response.ok) {
@@ -112,122 +186,51 @@ async function loadGames() {
         
         const games = await response.json();
         appState.games = games || [];
-        renderGames(games);
         updateStats();
-        showToast('Juegos cargados correctamente', 'success');
+        renderGamesList(appState.games);
     } catch (error) {
         console.error('Error:', error);
         showToast('Error al cargar los juegos', 'error');
-        renderEmptyState();
     }
 }
 
-// ===================== BÚSQUEDA =====================
-async function handleSearch() {
-    const query = elements.searchInput.value.trim();
+// ===================== BÚSQUEDA EN TIEMPO REAL =====================
+function handleSearch(e) {
+    const query = e.target.value.toLowerCase();
+    appState.searchQuery = query;
     
-    if (!query) {
-        loadGames();
-        return;
-    }
+    const filtered = appState.games.filter(game => 
+        game.name.toLowerCase().includes(query)
+    );
     
-    try {
-        showToast('Buscando juegos...', 'info');
-        const response = await fetch(`${API_GAMES}/search?query=${encodeURIComponent(query)}`);
-        
-        if (!response.ok) {
-            throw new Error('Error en la búsqueda');
-        }
-        
-        const games = await response.json();
-        renderGames(games);
-        showToast(`Se encontraron ${games.length} resultados`, 'success');
-    } catch (error) {
-        console.error('Error:', error);
-        showToast('Error en la búsqueda', 'error');
-    }
+    renderGamesList(filtered);
 }
 
-// ===================== RENDERIZAR JUEGOS =====================
-function renderGames(games) {
+// ===================== RENDERIZAR LISTA DE JUEGOS =====================
+function renderGamesList(games) {
     if (!games || games.length === 0) {
-        renderEmptyState();
+        elements.gamesList.innerHTML = '<div class="empty-list"><p>📭 No hay juegos</p></div>';
         return;
     }
     
-    elements.gamesGrid.innerHTML = games.map(game => createGameCard(game)).join('');
+    elements.gamesList.innerHTML = games.map(game => `
+        <div class="game-list-item ${appState.currentGame?.id === game.id ? 'active' : ''}" 
+             data-game-id="${game.id}">
+            <div class="game-list-item-title">${escapeHtml(game.name)}</div>
+            <div class="game-list-item-genre">${escapeHtml(game.genre || 'Sin género')}</div>
+        </div>
+    `).join('');
     
-    // Añadir event listeners a las tarjetas
-    document.querySelectorAll('.game-card').forEach((card, index) => {
-        card.addEventListener('click', () => showGameDetails(games[index]));
-    });
-    
-    document.querySelectorAll('.btn-edit-card').forEach((btn, index) => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            appState.currentGame = games[index];
-            openEditGameModal(games[index]);
-        });
-    });
-    
-    document.querySelectorAll('.btn-delete-card').forEach((btn, index) => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (confirm('¿Estás seguro de que deseas eliminar este juego?')) {
-                deleteGame(games[index].id);
+    // Event listeners para items
+    document.querySelectorAll('.game-list-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const gameId = parseInt(item.dataset.gameId);
+            const game = appState.games.find(g => g.id === gameId);
+            if (game) {
+                showGameDetail(game);
             }
         });
     });
-    
-    document.querySelectorAll('.btn-add-section').forEach((btn, index) => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            appState.currentGame = games[index];
-            openSectionsModal();
-        });
-    });
-}
-
-function createGameCard(game) {
-    const description = game.description ? game.description.substring(0, 100) + '...' : 'Sin descripción';
-    
-    return `
-        <div class="game-card">
-            <div class="game-card-header">
-                <h3 class="game-card-title">${escapeHtml(game.name)}</h3>
-                <span class="game-card-genre">${escapeHtml(game.genre || 'Sin género')}</span>
-            </div>
-            <div class="game-card-body">
-                <p class="game-description">${escapeHtml(description)}</p>
-                <div class="game-meta">
-                    ${game.categories && game.categories.length > 0 ? `
-                        <div class="game-meta-item">
-                            <span>📁 ${game.categories.length} categoría(s)</span>
-                        </div>
-                    ` : ''}
-                    ${game.tags && game.tags.length > 0 ? `
-                        <div class="game-meta-item">
-                            <span>🏷️ ${game.tags.length} tag(s)</span>
-                        </div>
-                    ` : ''}
-                </div>
-            </div>
-            <div class="game-card-footer">
-                <button class="btn btn-primary btn-edit-card" title="Editar">✏️ Editar</button>
-                <button class="btn btn-primary btn-add-section" title="Añadir sección">📝 Sección</button>
-                <button class="btn btn-danger btn-delete-card" title="Eliminar">🗑️ Eliminar</button>
-            </div>
-        </div>
-    `;
-}
-
-function renderEmptyState() {
-    elements.gamesGrid.innerHTML = `
-        <div class="empty-state">
-            <p>📭 No hay juegos registrados aún</p>
-            <p class="empty-subtitle">¡Crea tu primer juego para comenzar!</p>
-        </div>
-    `;
 }
 
 // ===================== ACTUALIZAR ESTADÍSTICAS =====================
@@ -246,29 +249,182 @@ function updateStats() {
     elements.totalCategories.textContent = categories.size;
 }
 
-// ===================== MODAL: CREAR JUEGO =====================
+// ===================== MOSTRAR DETALLE DEL JUEGO =====================
+function showGameDetail(game) {
+    appState.currentGame = game;
+    
+    // Actualizar URL con hash
+    window.location.hash = `game/${game.id}`;
+    
+    // Mostrar vista de detalle
+    elements.welcomeView.classList.remove('active');
+    elements.detailView.classList.add('active');
+    
+    // Actualizar header
+    elements.gameTitle.textContent = game.name;
+    elements.gameGenreDisplay.textContent = game.genre || 'Sin género';
+    
+    // Renderizar tags
+    renderTags(game);
+    
+    // Renderizar contenido
+    renderGameInfo(game);
+    renderGameSections(game);
+    
+    // Resetear sección activa
+    switchSection('info');
+    
+    // Actualizar lista lateral
+    renderGamesList(appState.searchQuery ? 
+        appState.games.filter(g => g.name.toLowerCase().includes(appState.searchQuery)) :
+        appState.games
+    );
+}
+
+// ===================== RENDERIZAR TAGS =====================
+function renderTags(game) {
+    if (!game.tags || game.tags.length === 0) {
+        elements.tagsContainer.innerHTML = '<p class="empty-text">Sin tags</p>';
+        return;
+    }
+    
+    elements.tagsContainer.innerHTML = game.tags
+        .map(tag => `<span class="tag">#${escapeHtml(tag.name)}</span>`)
+        .join('');
+}
+
+// ===================== RENDERIZAR INFO GENERAL =====================
+function renderGameInfo(game) {
+    elements.gameDescriptionDisplay.textContent = game.description || 'Sin descripción';
+    
+    if (!game.categories || game.categories.length === 0) {
+        elements.categoriesDisplay.innerHTML = '<p class="empty-text">Sin categorías</p>';
+    } else {
+        elements.categoriesDisplay.innerHTML = game.categories
+            .map(cat => `<span class="tag">${escapeHtml(cat.name)}</span>`)
+            .join('');
+    }
+}
+
+// ===================== RENDERIZAR SECCIONES =====================
+function renderGameSections(game) {
+    if (!game.sections || game.sections.length === 0) {
+        elements.gameplayContent.innerHTML = '<p class="empty-text">No hay sección de Gameplay agregada aún.</p><button class="btn btn-primary" id="btnAddGameplay">+ Añadir Gameplay</button>';
+        elements.storyContent.innerHTML = '<p class="empty-text">No hay sección de Historia agregada aún.</p><button class="btn btn-primary" id="btnAddStory">+ Añadir Historia</button>';
+        elements.visualsContent.innerHTML = '<p class="empty-text">No hay sección de Visuales agregada aún.</p><button class="btn btn-primary" id="btnAddVisuals">+ Añadir Visuales</button>';
+        elements.allSectionsContainer.innerHTML = '<p class="empty-text">Sin secciones agregadas aún.</p>';
+        
+        // Reactivar listeners de botones
+        document.getElementById('btnAddGameplay')?.addEventListener('click', () => openSectionModal('GAMEPLAY'));
+        document.getElementById('btnAddStory')?.addEventListener('click', () => openSectionModal('STORY'));
+        document.getElementById('btnAddVisuals')?.addEventListener('click', () => openSectionModal('VISUALS'));
+        return;
+    }
+    
+    // Renderizar por tipo
+    const gameplaySections = game.sections.filter(s => s.type === 'GAMEPLAY');
+    const storySections = game.sections.filter(s => s.type === 'STORY');
+    const visualsSections = game.sections.filter(s => s.type === 'VISUALS');
+    
+    elements.gameplayContent.innerHTML = gameplaySections.length > 0
+        ? gameplaySections.map(s => renderSectionContent(s, game)).join('')
+        : '<p class="empty-text">No hay sección de Gameplay.</p><button class="btn btn-primary" id="btnAddGameplay">+ Añadir Gameplay</button>';
+    
+    elements.storyContent.innerHTML = storySections.length > 0
+        ? storySections.map(s => renderSectionContent(s, game)).join('')
+        : '<p class="empty-text">No hay sección de Historia.</p><button class="btn btn-primary" id="btnAddStory">+ Añadir Historia</button>';
+    
+    elements.visualsContent.innerHTML = visualsSections.length > 0
+        ? visualsSections.map(s => renderSectionContent(s, game)).join('')
+        : '<p class="empty-text">No hay sección de Visuales.</p><button class="btn btn-primary" id="btnAddVisuals">+ Añadir Visuales</button>';
+    
+    // Renderizar todas las secciones
+    if (game.sections.length > 0) {
+        elements.allSectionsContainer.innerHTML = game.sections
+            .map((s, idx) => `
+                <div class="section-card">
+                    <div class="section-card-title">${escapeHtml(s.title)}</div>
+                    <div class="section-card-type">${s.type}</div>
+                    <div class="section-card-content">${escapeHtml(s.content)}</div>
+                </div>
+            `)
+            .join('');
+    } else {
+        elements.allSectionsContainer.innerHTML = '<p class="empty-text">Sin secciones agregadas aún.</p>';
+    }
+    
+    // Reactivar listeners
+    document.getElementById('btnAddGameplay')?.addEventListener('click', () => openSectionModal('GAMEPLAY'));
+    document.getElementById('btnAddStory')?.addEventListener('click', () => openSectionModal('STORY'));
+    document.getElementById('btnAddVisuals')?.addEventListener('click', () => openSectionModal('VISUALS'));
+}
+
+function renderSectionContent(section, game) {
+    return `
+        <div class="info-card">
+            <h3>${escapeHtml(section.title)}</h3>
+            <p>${escapeHtml(section.content)}</p>
+        </div>
+    `;
+}
+
+// ===================== NAVEGACIÓN POR SECCIONES (TABS) =====================
+function switchSection(sectionName) {
+    appState.currentSection = sectionName;
+    
+    // Actualizar tabs activo
+    elements.sectionTabs.forEach(tab => {
+        if (tab.dataset.section === sectionName) {
+            tab.classList.add('active');
+        } else {
+            tab.classList.remove('active');
+        }
+    });
+    
+    // Actualizar contenido visible
+    const sections = {
+        'info': elements.infoSection,
+        'gameplay': elements.gameplaySection,
+        'story': elements.storySection,
+        'visuals': elements.visualsSection,
+        'sections': elements.allSectionsSection
+    };
+    
+    Object.values(sections).forEach(section => section.classList.remove('active'));
+    if (sections[sectionName]) {
+        sections[sectionName].classList.add('active');
+    }
+}
+
+// ===================== MODAL: CREAR/EDITAR JUEGO =====================
 function openCreateGameModal() {
     appState.editingGameId = null;
     elements.modalTitle.textContent = 'Nuevo Juego';
     elements.gameForm.reset();
-    openModal(elements.gameModal);
+    elements.gameModal.classList.add('active');
 }
 
-function openEditGameModal(game) {
-    appState.editingGameId = game.id;
-    elements.modalTitle.textContent = `Editar: ${game.name}`;
+function editCurrentGame() {
+    if (!appState.currentGame) return;
     
-    elements.gameName.value = game.name;
-    elements.gameGenre.value = game.genre || '';
-    elements.gameDescription.value = game.description || '';
-    elements.gameCategories.value = game.categories ? game.categories.map(c => c.name).join(', ') : '';
-    elements.gameTags.value = game.tags ? game.tags.map(t => t.name).join(', ') : '';
+    appState.editingGameId = appState.currentGame.id;
+    elements.modalTitle.textContent = `Editar: ${appState.currentGame.name}`;
     
-    openModal(elements.gameModal);
+    elements.gameName.value = appState.currentGame.name;
+    elements.gameGenre.value = appState.currentGame.genre || '';
+    elements.gameDescription.value = appState.currentGame.description || '';
+    elements.gameCategories.value = appState.currentGame.categories 
+        ? appState.currentGame.categories.map(c => c.name).join(', ') 
+        : '';
+    elements.gameTags.value = appState.currentGame.tags 
+        ? appState.currentGame.tags.map(t => t.name).join(', ') 
+        : '';
+    
+    elements.gameModal.classList.add('active');
 }
 
 function closeGameModal() {
-    closeModal(elements.gameModal);
+    elements.gameModal.classList.remove('active');
     elements.gameForm.reset();
     appState.editingGameId = null;
 }
@@ -301,10 +457,8 @@ async function handleGameFormSubmit(e) {
         });
         
         if (!response.ok) {
-            throw new Error(response.status === 404 ? 'Juego no encontrado' : 'Error al guardar');
+            throw new Error('Error al guardar');
         }
-        
-        const savedGame = await response.json();
         
         closeGameModal();
         showToast(
@@ -312,87 +466,22 @@ async function handleGameFormSubmit(e) {
             'success'
         );
         
-        loadGames();
+        await loadGames();
     } catch (error) {
         console.error('Error:', error);
         showToast('Error al guardar el juego', 'error');
     }
 }
 
-// ===================== MODAL: DETALLES =====================
-function showGameDetails(game) {
-    appState.currentGame = game;
-    elements.detailsTitle.textContent = game.name;
-    
-    const detailsHTML = `
-        <div class="details-content">
-            <div class="detail-section">
-                <h3>Información General</h3>
-                <p><strong>Nombre:</strong> ${escapeHtml(game.name)}</p>
-                <p><strong>Género:</strong> ${escapeHtml(game.genre || 'No especificado')}</p>
-                <p><strong>Descripción:</strong> ${escapeHtml(game.description || 'Sin descripción')}</p>
-            </div>
-            
-            ${game.categories && game.categories.length > 0 ? `
-                <div class="detail-section">
-                    <h3>Categorías</h3>
-                    <div class="tags-list">
-                        ${game.categories.map(cat => `<span class="tag">${escapeHtml(cat.name)}</span>`).join('')}
-                    </div>
-                </div>
-            ` : ''}
-            
-            ${game.tags && game.tags.length > 0 ? `
-                <div class="detail-section">
-                    <h3>Tags</h3>
-                    <div class="tags-list">
-                        ${game.tags.map(tag => `<span class="tag">${escapeHtml(tag.name)}</span>`).join('')}
-                    </div>
-                </div>
-            ` : ''}
-            
-            ${game.sections && game.sections.length > 0 ? `
-                <div class="detail-section">
-                    <h3>Secciones</h3>
-                    ${game.sections.map(section => `
-                        <div style="margin-bottom: 15px; padding: 12px; background: white; border-radius: 6px;">
-                            <strong>${escapeHtml(section.title)}</strong> <em>(${section.type})</em>
-                            <p style="margin-top: 8px; color: #6b7280;">${escapeHtml(section.content)}</p>
-                        </div>
-                    `).join('')}
-                </div>
-            ` : ''}
-        </div>
-    `;
-    
-    elements.detailsBody.innerHTML = detailsHTML;
-    openModal(elements.detailsModal);
-}
-
-function closeDetailsModal() {
-    closeModal(elements.detailsModal);
-    appState.currentGame = null;
-}
-
-function editCurrentGame() {
-    if (appState.currentGame) {
-        closeDetailsModal();
-        openEditGameModal(appState.currentGame);
-    }
-}
-
 async function deleteCurrentGame() {
     if (!appState.currentGame) return;
     
-    if (confirm(`¿Estás seguro de que deseas eliminar "${appState.currentGame.name}"?`)) {
-        await deleteGame(appState.currentGame.id);
-        closeDetailsModal();
+    if (!confirm(`¿Estás seguro de que deseas eliminar "${appState.currentGame.name}"?`)) {
+        return;
     }
-}
-
-async function deleteGame(gameId) {
+    
     try {
-        const response = await fetch(`${API_GAMES}/${gameId}`, {
+        const response = await fetch(`${API_GAMES}/${appState.currentGame.id}`, {
             method: 'DELETE'
         });
         
@@ -401,22 +490,30 @@ async function deleteGame(gameId) {
         }
         
         showToast('Juego eliminado correctamente', 'success');
-        loadGames();
+        goToWelcome();
+        await loadGames();
     } catch (error) {
         console.error('Error:', error);
         showToast('Error al eliminar el juego', 'error');
     }
 }
 
-// ===================== MODAL: SECCIONES =====================
-function openSectionsModal() {
+// ===================== MODAL: AÑADIR SECCIÓN =====================
+function openSectionModal(type = null) {
     if (!appState.currentGame) return;
+    
+    elements.sectionModalTitle.textContent = 'Añadir Sección';
     elements.sectionForm.reset();
-    openModal(elements.sectionsModal);
+    
+    if (type) {
+        elements.sectionType.value = type;
+    }
+    
+    elements.sectionModal.classList.add('active');
 }
 
-function closeSectionsModal() {
-    closeModal(elements.sectionsModal);
+function closeSectionModal() {
+    elements.sectionModal.classList.remove('active');
     elements.sectionForm.reset();
 }
 
@@ -450,9 +547,12 @@ async function handleSectionFormSubmit(e) {
             throw new Error('Error al guardar la sección');
         }
         
-        closeSectionsModal();
+        closeSectionModal();
         showToast('Sección añadida correctamente', 'success');
-        loadGames();
+        
+        // Recargar juego actual
+        const updated = await response.json();
+        showGameDetail(updated);
     } catch (error) {
         console.error('Error:', error);
         showToast('Error al añadir la sección', 'error');
@@ -460,16 +560,6 @@ async function handleSectionFormSubmit(e) {
 }
 
 // ===================== UTILIDADES =====================
-function openModal(modal) {
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeModal(modal) {
-    modal.classList.remove('active');
-    document.body.style.overflow = 'auto';
-}
-
 function showToast(message, type = 'success') {
     elements.toast.textContent = message;
     elements.toast.className = `toast show ${type}`;
@@ -493,11 +583,3 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
-
-// ===================== SINCRONIZACIÓN =====================
-// Cargar juegos cada 30 segundos
-setInterval(() => {
-    if (!elements.gameModal.classList.contains('active')) {
-        loadGames();
-    }
-}, 30000);
