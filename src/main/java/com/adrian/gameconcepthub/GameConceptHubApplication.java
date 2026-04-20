@@ -1,14 +1,12 @@
 package com.adrian.gameconcepthub;
 
-import com.adrian.gameconcepthub.config.BeanConfig;
-import com.adrian.gameconcepthub.domain.model.Game;
-import java.util.List;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
 public class GameConceptHubApplication {
 
     public static void main(String[] args) {
-        BeanConfig config = new BeanConfig();
-        List<Game> games = config.gameController().search("");
-        System.out.println("Game Concept Hub ready. Loaded games: " + games.size());
+        SpringApplication.run(GameConceptHubApplication.class, args);
     }
 }

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Concept Hub - Organizador de Ideas de Videojuegos</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">🎮 Game Concept Hub</h1>
+                <p class="tagline">Organiza y desarrolla tus ideas de videojuegos</p>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-content">
+                <button class="btn btn-primary" id="btnCreateGame">
+                    <span class="icon">+</span> Nuevo Juego
+                </button>
+                <div class="search-box">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="Buscar juegos..."
+                    >
+                    <button class="btn btn-search" id="btnSearch">Buscar</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Stats -->
+            <section class="stats-section">
+                <div class="stat-card">
+                    <h3>Total de Juegos</h3>
+                    <p class="stat-value" id="totalGames">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Géneros</h3>
+                    <p class="stat-value" id="totalGenres">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Categorías</h3>
+                    <p class="stat-value" id="totalCategories">0</p>
+                </div>
+            </section>
+
+            <!-- Games Grid -->
+            <section class="games-section">
+                <h2>Tus Juegos</h2>
+                <div class="games-grid" id="gamesGrid">
+                    <div class="empty-state">
+                        <p>📭 No hay juegos registrados aún</p>
+                        <p class="empty-subtitle">¡Crea tu primer juego para comenzar!</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal: Crear/Editar Juego -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Nuevo Juego</h2>
+                <button class="btn-close" id="btnCloseGameModal">&times;</button>
+            </div>
+            <form id="gameForm" class="game-form">
+                <div class="form-group">
+                    <label for="gameName">Nombre del Juego *</label>
+                    <input 
+                        type="text" 
+                        id="gameName" 
+                        class="form-control" 
+                        placeholder="Ej: Mi Aventura Épica"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="gameGenre">Género *</label>
+                    <select id="gameGenre" class="form-control" required>
+                        <option value="">Selecciona un género</option>
+                        <option value="Acción">Acción</option>
+                        <option value="Aventura">Aventura</option>
+                        <option value="RPG">RPG</option>
+                        <option value="Estrategia">Estrategia</option>
+                        <option value="Puzzle">Puzzle</option>
+                        <option value="Deportes">Deportes</option>
+                        <option value="Simulación">Simulación</option>
+                        <option value="Terror">Terror</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="gameDescription">Descripción</label>
+                    <textarea 
+                        id="gameDescription" 
+                        class="form-control" 
+                        placeholder="Describe tu idea de juego..."
+                        rows="4"
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="gameCategories">Categorías (separadas por comas)</label>
+                    <input 
+                        type="text" 
+                        id="gameCategories" 
+                        class="form-control" 
+                        placeholder="Ej: 2D, Pixel Art, Indie"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="gameTags">Tags (separadas por comas)</label>
+                    <input 
+                        type="text" 
+                        id="gameTags" 
+                        class="form-control" 
+                        placeholder="Ej: Retro, Nostálgico, Clásico"
+                    >
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="btnCancelGame">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Juego</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Detalles del Juego -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="detailsTitle">Detalles del Juego</h2>
+                <button class="btn-close" id="btnCloseDetailsModal">&times;</button>
+            </div>
+            <div class="modal-body" id="detailsBody">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="btnEditGame">Editar</button>
+                <button class="btn btn-danger" id="btnDeleteGame">Eliminar</button>
+                <button class="btn btn-secondary" id="btnCloseDetails">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Añadir Secciones -->
+    <div id="sectionsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Añadir Sección</h2>
+                <button class="btn-close" id="btnCloseSectionsModal">&times;</button>
+            </div>
+            <form id="sectionForm" class="section-form">
+                <div class="form-group">
+                    <label for="sectionTitle">Título de la Sección *</label>
+                    <input 
+                        type="text" 
+                        id="sectionTitle" 
+                        class="form-control" 
+                        placeholder="Ej: Mecánicas Principales"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="sectionType">Tipo de Sección *</label>
+                    <select id="sectionType" class="form-control" required>
+                        <option value="">Selecciona un tipo</option>
+                        <option value="GAMEPLAY">Gameplay</option>
+                        <option value="STORY">Historia</option>
+                        <option value="MECHANICS">Mecánicas</option>
+                        <option value="VISUALS">Visuales</option>
+                        <option value="AUDIO">Audio</option>
+                        <option value="NOTES">Notas</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sectionContent">Contenido</label>
+                    <textarea 
+                        id="sectionContent" 
+                        class="form-control" 
+                        placeholder="Escribe el contenido de esta sección..."
+                        rows="5"
+                    ></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="btnCancelSection">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Añadir Sección</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast" class="toast"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

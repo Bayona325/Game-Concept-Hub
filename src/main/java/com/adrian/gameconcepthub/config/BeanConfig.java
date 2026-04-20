@@ -11,40 +11,44 @@ import com.adrian.gameconcepthub.infrastructure.persistence.repository.JpaTagRep
 import com.adrian.gameconcepthub.infrastructure.persistence.repository.JpaUserRepository;
 import com.adrian.gameconcepthub.infrastructure.web.controller.AuthController;
 import com.adrian.gameconcepthub.infrastructure.web.controller.GameController;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class BeanConfig {
 
-    private final GameRepository gameRepository = new JpaGameRepository();
-    private final CategoryRepository categoryRepository = new JpaCategoryRepository();
-    private final TagRepository tagRepository = new JpaTagRepository();
-    private final UserRepository userRepository = new JpaUserRepository();
-    private final GameService gameService = new GameService(gameRepository, categoryRepository, tagRepository);
-
+    @Bean
     public GameRepository gameRepository() {
-        return gameRepository;
+        return new JpaGameRepository();
     }
 
+    @Bean
     public CategoryRepository categoryRepository() {
-        return categoryRepository;
+        return new JpaCategoryRepository();
     }
 
+    @Bean
     public TagRepository tagRepository() {
-        return tagRepository;
+        return new JpaTagRepository();
     }
 
+    @Bean
     public UserRepository userRepository() {
-        return userRepository;
+        return new JpaUserRepository();
     }
 
-    public GameService gameService() {
-        return gameService;
+    @Bean
+    public GameService gameService(GameRepository gameRepository, CategoryRepository categoryRepository, TagRepository tagRepository) {
+        return new GameService(gameRepository, categoryRepository, tagRepository);
     }
 
-    public GameController gameController() {
+    @Bean
+    public GameController gameController(GameService gameService) {
         return new GameController(gameService, gameService, gameService);
     }
 
-    public AuthController authController() {
+    @Bean
+    public AuthController authController(UserRepository userRepository) {
         return new AuthController(userRepository);
     }
 }
