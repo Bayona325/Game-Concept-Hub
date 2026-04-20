@@ -1,8 +1,8 @@
-package main.java.com.adrian.gameconcepthub.infrastructure.persistence.repository;
+package com.adrian.gameconcepthub.infrastructure.persistence.repository;
 
-import main.java.com.adrian.gameconcepthub.domain.model.Tag;
-import main.java.com.adrian.gameconcepthub.domain.port.out.TagRepository;
-import main.java.com.adrian.gameconcepthub.infrastructure.persistence.entity.TagEntity;
+import com.adrian.gameconcepthub.domain.model.Tag;
+import com.adrian.gameconcepthub.domain.port.out.TagRepository;
+import com.adrian.gameconcepthub.infrastructure.persistence.entity.TagEntity;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;

@@ -1,16 +1,16 @@
-package main.java.com.adrian.gameconcepthub.config;
+package com.adrian.gameconcepthub.config;
 
-import main.java.com.adrian.gameconcepthub.application.service.GameService;
-import main.java.com.adrian.gameconcepthub.domain.port.out.CategoryRepository;
-import main.java.com.adrian.gameconcepthub.domain.port.out.GameRepository;
-import main.java.com.adrian.gameconcepthub.domain.port.out.TagRepository;
-import main.java.com.adrian.gameconcepthub.domain.port.out.UserRepository;
-import main.java.com.adrian.gameconcepthub.infrastructure.persistence.repository.JpaCategoryRepository;
-import main.java.com.adrian.gameconcepthub.infrastructure.persistence.repository.JpaGameRepository;
-import main.java.com.adrian.gameconcepthub.infrastructure.persistence.repository.JpaTagRepository;
-import main.java.com.adrian.gameconcepthub.infrastructure.persistence.repository.JpaUserRepository;
-import main.java.com.adrian.gameconcepthub.infrastructure.web.controller.AuthController;
-import main.java.com.adrian.gameconcepthub.infrastructure.web.controller.GameController;
+import com.adrian.gameconcepthub.application.service.GameService;
+import com.adrian.gameconcepthub.domain.port.out.CategoryRepository;
+import com.adrian.gameconcepthub.domain.port.out.GameRepository;
+import com.adrian.gameconcepthub.domain.port.out.TagRepository;
+import com.adrian.gameconcepthub.domain.port.out.UserRepository;
+import com.adrian.gameconcepthub.infrastructure.persistence.repository.JpaCategoryRepository;
+import com.adrian.gameconcepthub.infrastructure.persistence.repository.JpaGameRepository;
+import com.adrian.gameconcepthub.infrastructure.persistence.repository.JpaTagRepository;
+import com.adrian.gameconcepthub.infrastructure.persistence.repository.JpaUserRepository;
+import com.adrian.gameconcepthub.infrastructure.web.controller.AuthController;
+import com.adrian.gameconcepthub.infrastructure.web.controller.GameController;
 
 public class BeanConfig {
 

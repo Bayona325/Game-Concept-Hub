@@ -1,8 +1,8 @@
-package main.java.com.adrian.gameconcepthub.infrastructure.persistence.repository;
+package com.adrian.gameconcepthub.infrastructure.persistence.repository;
 
-import main.java.com.adrian.gameconcepthub.domain.model.Category;
-import main.java.com.adrian.gameconcepthub.domain.port.out.CategoryRepository;
-import main.java.com.adrian.gameconcepthub.infrastructure.persistence.entity.CategoryEntity;
+import com.adrian.gameconcepthub.domain.model.Category;
+import com.adrian.gameconcepthub.domain.port.out.CategoryRepository;
+import com.adrian.gameconcepthub.infrastructure.persistence.entity.CategoryEntity;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;

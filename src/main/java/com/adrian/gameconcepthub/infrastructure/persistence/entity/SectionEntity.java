@@ -1,6 +1,6 @@
-package main.java.com.adrian.gameconcepthub.infrastructure.persistence.entity;
+package com.adrian.gameconcepthub.infrastructure.persistence.entity;
 
-import main.java.com.adrian.gameconcepthub.domain.model.SectionType;
+import com.adrian.gameconcepthub.domain.model.SectionType;
 
 public class SectionEntity {
 

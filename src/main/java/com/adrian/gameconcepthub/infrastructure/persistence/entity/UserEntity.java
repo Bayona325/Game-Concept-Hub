@@ -1,4 +1,4 @@
-package main.java.com.adrian.gameconcepthub.infrastructure.persistence.entity;
+package com.adrian.gameconcepthub.infrastructure.persistence.entity;
 
 public class UserEntity {
 

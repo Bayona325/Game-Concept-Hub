@@ -1,6 +1,6 @@
-package main.java.com.adrian.gameconcepthub.domain.port.out;
+package com.adrian.gameconcepthub.domain.port.out;
 
-import main.java.com.adrian.gameconcepthub.domain.model.User;
+import com.adrian.gameconcepthub.domain.model.User;
 import java.util.Optional;
 
 public interface UserRepository {

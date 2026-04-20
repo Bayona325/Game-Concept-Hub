@@ -1,14 +1,14 @@
-package main.java.com.adrian.gameconcepthub.infrastructure.persistence.repository;
+package com.adrian.gameconcepthub.infrastructure.persistence.repository;
 
-import main.java.com.adrian.gameconcepthub.domain.model.Category;
-import main.java.com.adrian.gameconcepthub.domain.model.Game;
-import main.java.com.adrian.gameconcepthub.domain.model.Section;
-import main.java.com.adrian.gameconcepthub.domain.model.Tag;
-import main.java.com.adrian.gameconcepthub.domain.port.out.GameRepository;
-import main.java.com.adrian.gameconcepthub.infrastructure.persistence.entity.CategoryEntity;
-import main.java.com.adrian.gameconcepthub.infrastructure.persistence.entity.GameEntity;
-import main.java.com.adrian.gameconcepthub.infrastructure.persistence.entity.SectionEntity;
-import main.java.com.adrian.gameconcepthub.infrastructure.persistence.entity.TagEntity;
+import com.adrian.gameconcepthub.domain.model.Category;
+import com.adrian.gameconcepthub.domain.model.Game;
+import com.adrian.gameconcepthub.domain.model.Section;
+import com.adrian.gameconcepthub.domain.model.Tag;
+import com.adrian.gameconcepthub.domain.port.out.GameRepository;
+import com.adrian.gameconcepthub.infrastructure.persistence.entity.CategoryEntity;
+import com.adrian.gameconcepthub.infrastructure.persistence.entity.GameEntity;
+import com.adrian.gameconcepthub.infrastructure.persistence.entity.SectionEntity;
+import com.adrian.gameconcepthub.infrastructure.persistence.entity.TagEntity;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;

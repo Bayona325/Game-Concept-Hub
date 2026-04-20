@@ -1,8 +1,8 @@
-package main.java.com.adrian.gameconcepthub.infrastructure.persistence.repository;
+package com.adrian.gameconcepthub.infrastructure.persistence.repository;
 
-import main.java.com.adrian.gameconcepthub.domain.model.User;
-import main.java.com.adrian.gameconcepthub.domain.port.out.UserRepository;
-import main.java.com.adrian.gameconcepthub.infrastructure.persistence.entity.UserEntity;
+import com.adrian.gameconcepthub.domain.model.User;
+import com.adrian.gameconcepthub.domain.port.out.UserRepository;
+import com.adrian.gameconcepthub.infrastructure.persistence.entity.UserEntity;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;

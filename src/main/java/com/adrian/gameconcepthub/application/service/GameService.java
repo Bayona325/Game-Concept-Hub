@@ -1,14 +1,14 @@
-package main.java.com.adrian.gameconcepthub.application.service;
+package com.adrian.gameconcepthub.application.service;
 
-import main.java.com.adrian.gameconcepthub.domain.model.Category;
-import main.java.com.adrian.gameconcepthub.domain.model.Game;
-import main.java.com.adrian.gameconcepthub.domain.model.Tag;
-import main.java.com.adrian.gameconcepthub.domain.port.in.CreateGameUseCase;
-import main.java.com.adrian.gameconcepthub.domain.port.in.GetGameUseCase;
-import main.java.com.adrian.gameconcepthub.domain.port.in.SearchGameUseCase;
-import main.java.com.adrian.gameconcepthub.domain.port.out.CategoryRepository;
-import main.java.com.adrian.gameconcepthub.domain.port.out.GameRepository;
-import main.java.com.adrian.gameconcepthub.domain.port.out.TagRepository;
+import com.adrian.gameconcepthub.domain.model.Category;
+import com.adrian.gameconcepthub.domain.model.Game;
+import com.adrian.gameconcepthub.domain.model.Tag;
+import com.adrian.gameconcepthub.domain.port.in.CreateGameUseCase;
+import com.adrian.gameconcepthub.domain.port.in.GetGameUseCase;
+import com.adrian.gameconcepthub.domain.port.in.SearchGameUseCase;
+import com.adrian.gameconcepthub.domain.port.out.CategoryRepository;
+import com.adrian.gameconcepthub.domain.port.out.GameRepository;
+import com.adrian.gameconcepthub.domain.port.out.TagRepository;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;

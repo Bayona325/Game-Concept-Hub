@@ -1,6 +1,6 @@
-package main.java.com.adrian.gameconcepthub.domain.port.in;
+package com.adrian.gameconcepthub.domain.port.in;
 
-import main.java.com.adrian.gameconcepthub.domain.model.Game;
+import com.adrian.gameconcepthub.domain.model.Game;
 
 public interface CreateGameUseCase {
 

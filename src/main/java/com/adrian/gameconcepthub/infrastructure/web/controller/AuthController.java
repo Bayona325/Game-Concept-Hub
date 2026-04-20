@@ -1,10 +1,13 @@
-package main.java.com.adrian.gameconcepthub.infrastructure.web.controller;
+package com.adrian.gameconcepthub.infrastructure.web.controller;
 
-import main.java.com.adrian.gameconcepthub.domain.model.User;
-import main.java.com.adrian.gameconcepthub.domain.port.out.UserRepository;
+import com.adrian.gameconcepthub.domain.model.User;
+import com.adrian.gameconcepthub.domain.port.out.UserRepository;
+import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 import java.util.Optional;
 
+@RestController
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final UserRepository userRepository;
@@ -13,7 +16,8 @@ public class AuthController {
         this.userRepository = Objects.requireNonNull(userRepository);
     }
 
-    public User register(String username, String password) {
+    @PostMapping("/register")
+    public User register(@RequestParam String username, @RequestParam String password) {
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("Username is required");
         }
@@ -26,7 +30,8 @@ public class AuthController {
         return userRepository.save(new User(null, username.trim(), password, "ADMIN"));
     }
 
-    public Optional<User> login(String username, String password) {
+    @PostMapping("/login")
+    public Optional<User> login(@RequestParam String username, @RequestParam String password) {
         return userRepository.findByUsername(username)
                 .filter(user -> user.getPassword().equals(password));
     }

@@ -1,7 +1,7 @@
-package main.java.com.adrian.gameconcepthub;
+package com.adrian.gameconcepthub;
 
-import main.java.com.adrian.gameconcepthub.config.BeanConfig;
-import main.java.com.adrian.gameconcepthub.domain.model.Game;
+import com.adrian.gameconcepthub.config.BeanConfig;
+import com.adrian.gameconcepthub.domain.model.Game;
 import java.util.List;
 
 public class GameConceptHubApplication {

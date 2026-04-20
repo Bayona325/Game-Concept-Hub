@@ -1,6 +1,6 @@
-package main.java.com.adrian.gameconcepthub.domain.port.out;
+package com.adrian.gameconcepthub.domain.port.out;
 
-import main.java.com.adrian.gameconcepthub.domain.model.Tag;
+import com.adrian.gameconcepthub.domain.model.Tag;
 import java.util.List;
 import java.util.Optional;
 

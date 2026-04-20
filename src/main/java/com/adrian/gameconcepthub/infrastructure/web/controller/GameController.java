@@ -1,12 +1,15 @@
-package main.java.com.adrian.gameconcepthub.infrastructure.web.controller;
+package com.adrian.gameconcepthub.infrastructure.web.controller;
 
-import main.java.com.adrian.gameconcepthub.domain.model.Game;
-import main.java.com.adrian.gameconcepthub.domain.port.in.CreateGameUseCase;
-import main.java.com.adrian.gameconcepthub.domain.port.in.GetGameUseCase;
-import main.java.com.adrian.gameconcepthub.domain.port.in.SearchGameUseCase;
+import com.adrian.gameconcepthub.domain.model.Game;
+import com.adrian.gameconcepthub.domain.port.in.CreateGameUseCase;
+import com.adrian.gameconcepthub.domain.port.in.GetGameUseCase;
+import com.adrian.gameconcepthub.domain.port.in.SearchGameUseCase;
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@RestController
+@RequestMapping("/api/games")
 public class GameController {
 
     private final CreateGameUseCase createGameUseCase;
@@ -21,15 +24,18 @@ public class GameController {
         this.searchGameUseCase = searchGameUseCase;
     }
 
-    public Game create(Game game) {
+    @PostMapping
+    public Game create(@RequestBody Game game) {
         return createGameUseCase.createGame(game);
     }
 
-    public Optional<Game> getById(Long id) {
+    @GetMapping("/{id}")
+    public Optional<Game> getById(@PathVariable Long id) {
         return getGameUseCase.getGameById(id);
     }
 
-    public List<Game> search(String query) {
+    @GetMapping("/search")
+    public List<Game> search(@RequestParam String query) {
         return searchGameUseCase.search(query);
     }
 }

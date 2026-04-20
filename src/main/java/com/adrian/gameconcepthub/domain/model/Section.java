@@ -1,4 +1,4 @@
-package main.java.com.adrian.gameconcepthub.domain.model;
+package com.adrian.gameconcepthub.domain.model;
 
 public class Section {
 
