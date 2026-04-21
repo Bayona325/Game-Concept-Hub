@@ -1,15 +1,22 @@
 package com.adrian.gameconcepthub.infrastructure.persistence.entity;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "tags")
 public class TagEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, unique = true, length = 100)
     private String name;
 
     public TagEntity() {
     }
 
-    public TagEntity(Long id, String name) {
-        this.id = id;
+    public TagEntity(String name) {
         this.name = name;
     }
 

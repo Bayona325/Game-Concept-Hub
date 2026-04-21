@@ -1,32 +1,15 @@
 package com.adrian.gameconcepthub.infrastructure.persistence.repository;
 
-import com.adrian.gameconcepthub.domain.model.User;
-import com.adrian.gameconcepthub.domain.port.out.UserRepository;
 import com.adrian.gameconcepthub.infrastructure.persistence.entity.UserEntity;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
-public class JpaUserRepository implements UserRepository {
-
-    private final Map<String, UserEntity> storage = new LinkedHashMap<>();
-    private final AtomicLong sequence = new AtomicLong(1);
-
-    @Override
-    public Optional<User> findByUsername(String username) {
-        return Optional.ofNullable(storage.get(username)).map(this::toDomain);
-    }
-
-    @Override
-    public User save(User user) {
-        Long id = user.getId() == null ? sequence.getAndIncrement() : user.getId();
-        UserEntity entity = new UserEntity(id, user.getUsername(), user.getPassword(), user.getRole());
-        storage.put(entity.getUsername(), entity);
-        return toDomain(entity);
-    }
-
-    private User toDomain(UserEntity entity) {
-        return new User(entity.getId(), entity.getUsername(), entity.getPassword(), entity.getRole());
-    }
+@Repository
+public interface JpaUserRepository extends JpaRepository<UserEntity, Long> {
+    Optional<UserEntity> findByUsername(String username);
+    Optional<UserEntity> findByEmail(String email);
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 }

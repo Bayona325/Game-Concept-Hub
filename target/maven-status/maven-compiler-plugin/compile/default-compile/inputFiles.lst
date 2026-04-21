@@ -2,15 +2,19 @@
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/infrastructure/web/controller/AuthController.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/domain/port/in/SearchGameUseCase.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/domain/model/SectionType.java
+/home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/infrastructure/web/dto/AuthResponse.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/domain/model/Tag.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/domain/port/out/CategoryRepository.java
+/home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/infrastructure/web/dto/RegisterRequest.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/infrastructure/persistence/repository/JpaGameRepository.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/infrastructure/persistence/entity/GameEntity.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/infrastructure/persistence/entity/UserEntity.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/infrastructure/persistence/entity/TagEntity.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/domain/model/Game.java
+/home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/config/SecurityConfig.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/domain/port/in/CreateGameUseCase.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/domain/model/Category.java
+/home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/infrastructure/web/dto/LoginRequest.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/infrastructure/persistence/repository/JpaUserRepository.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/domain/port/out/GameRepository.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/config/BeanConfig.java
@@ -25,3 +29,4 @@
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/domain/port/out/TagRepository.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/infrastructure/web/controller/GameController.java
 /home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/infrastructure/persistence/entity/CategoryEntity.java
+/home/adrian/Game_Concept_Hub/Game-Concept-Hub/src/main/java/com/adrian/gameconcepthub/application/service/AuthService.java

@@ -1,3 +1,5 @@
+com/adrian/gameconcepthub/infrastructure/web/dto/RegisterRequest.class
+com/adrian/gameconcepthub/application/service/AuthService.class
 com/adrian/gameconcepthub/domain/model/Section.class
 com/adrian/gameconcepthub/config/BeanConfig.class
 com/adrian/gameconcepthub/domain/port/in/SearchGameUseCase.class
@@ -6,6 +8,7 @@ com/adrian/gameconcepthub/domain/port/out/GameRepository.class
 com/adrian/gameconcepthub/infrastructure/persistence/repository/JpaTagRepository.class
 com/adrian/gameconcepthub/infrastructure/persistence/entity/CategoryEntity.class
 com/adrian/gameconcepthub/domain/port/out/TagRepository.class
+com/adrian/gameconcepthub/infrastructure/web/dto/LoginRequest.class
 com/adrian/gameconcepthub/domain/model/SectionType.class
 com/adrian/gameconcepthub/domain/model/Game.class
 com/adrian/gameconcepthub/infrastructure/persistence/entity/GameEntity.class
@@ -19,9 +22,12 @@ com/adrian/gameconcepthub/domain/port/in/GetGameUseCase.class
 com/adrian/gameconcepthub/domain/port/out/CategoryRepository.class
 com/adrian/gameconcepthub/infrastructure/web/controller/GameController.class
 com/adrian/gameconcepthub/infrastructure/persistence/entity/TagEntity.class
+com/adrian/gameconcepthub/infrastructure/web/dto/AuthResponse.class
 com/adrian/gameconcepthub/infrastructure/persistence/entity/SectionEntity.class
 com/adrian/gameconcepthub/GameConceptHubApplication.class
 com/adrian/gameconcepthub/domain/port/in/CreateGameUseCase.class
+com/adrian/gameconcepthub/config/SecurityConfig$1.class
 com/adrian/gameconcepthub/application/service/GameService.class
+com/adrian/gameconcepthub/config/SecurityConfig.class
 com/adrian/gameconcepthub/domain/model/User.class
 com/adrian/gameconcepthub/domain/model/Category.class

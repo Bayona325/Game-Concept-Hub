@@ -1,19 +1,30 @@
 package com.adrian.gameconcepthub.infrastructure.persistence.entity;
 
 import com.adrian.gameconcepthub.domain.model.SectionType;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "sections")
 public class SectionEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 200)
     private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private SectionType type;
 
     public SectionEntity() {
     }
 
-    public SectionEntity(Long id, String title, String content, SectionType type) {
-        this.id = id;
+    public SectionEntity(String title, String content, SectionType type) {
         this.title = title;
         this.content = content;
         this.type = type;
