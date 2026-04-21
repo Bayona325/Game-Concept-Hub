@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Game Concept Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-login {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-login:hover {
+            background: #5568d3;
+        }
+
+        .btn-register {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-register:hover {
+            background: #e0e0e0;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .info {
+            background: #e7f3ff;
+            color: #004085;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 13px;
+            border: 1px solid #b8daff;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Game Concept Hub</h1>
+        <p class="subtitle">Gestiona tus ideas de videojuegos</p>
+
+        <div id="alert" class="alert"></div>
+
+        <!-- FORMULARIO DE LOGIN -->
+        <div id="loginForm">
+            <div class="form-group">
+                <label for="username">Usuario:</label>
+                <input type="text" id="username" placeholder="Ingresa tu usuario" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" placeholder="Ingresa tu contraseña" required>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-login" onclick="handleLogin()">Inicia Sesión</button>
+                <button class="btn-register" onclick="switchToRegister()">Registrarse</button>
+            </div>
+        </div>
+
+        <!-- FORMULARIO DE REGISTRO -->
+        <div id="registerForm" style="display: none;">
+            <div class="form-group">
+                <label for="regUsername">Usuario:</label>
+                <input type="text" id="regUsername" placeholder="Elige un usuario" required>
+            </div>
+
+            <div class="form-group">
+                <label for="regEmail">Email:</label>
+                <input type="email" id="regEmail" placeholder="Ingresa tu email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="regPassword">Contraseña:</label>
+                <input type="password" id="regPassword" placeholder="Ingresa una contraseña" required>
+            </div>
+
+            <div class="form-group">
+                <label for="regPasswordConfirm">Confirmar Contraseña:</label>
+                <input type="password" id="regPasswordConfirm" placeholder="Confirma tu contraseña" required>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-login" onclick="handleRegister()">Registrarse</button>
+                <button class="btn-register" onclick="switchToLogin()">Cancelar</button>
+            </div>
+        </div>
+
+        <div class="info">
+            💡 <strong>Prueba:</strong> Usuario: admin | Contraseña: admin123 (si lo configuraste)
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080/api';
+
+        function showAlert(message, type = 'success') {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = `alert ${type}`;
+            setTimeout(() => {
+                alert.className = 'alert';
+            }, 5000);
+        }
+
+        function switchToRegister() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('alert').className = 'alert';
+        }
+
+        function switchToLogin() {
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('alert').className = 'alert';
+        }
+
+        async function handleLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                showAlert('Por favor rellena todos los campos', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showAlert(`¡Bienvenido, ${data.username}!`, 'success');
+                    setTimeout(() => {
+                        window.location.href = '/index.html';
+                    }, 2000);
+                } else {
+                    showAlert(data.message || 'Error al iniciar sesión', 'error');
+                }
+            } catch (error) {
+                showAlert('Error de conexión: ' + error.message, 'error');
+            }
+        }
+
+        async function handleRegister() {
+            const username = document.getElementById('regUsername').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+
+            if (!username || !email || !password || !passwordConfirm) {
+                showAlert('Por favor rellena todos los campos', 'error');
+                return;
+            }
+
+            if (password !== passwordConfirm) {
+                showAlert('Las contraseñas no coinciden', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, email, password, passwordConfirm })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showAlert('¡Registro exitoso! Por favor inicia sesión', 'success');
+                    setTimeout(() => {
+                        switchToLogin();
+                        document.getElementById('username').value = username;
+                        document.getElementById('password').value = '';
+                    }, 2000);
+                } else {
+                    showAlert(data.message || 'Error al registrarse', 'error');
+                }
+            } catch (error) {
+                showAlert('Error de conexión: ' + error.message, 'error');
+            }
+        }
+
+        // Permitir Enter para enviar
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                if (document.getElementById('loginForm').style.display !== 'none') {
+                    handleLogin();
+                } else {
+                    handleRegister();
+                }
+            }
+        });
+
+        // Verificar si ya hay sesión
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${API_URL}/auth/check`, {
+                    credentials: 'include'
+                });
+                if (response.ok && await response.json()) {
+                    window.location.href = '/index.html';
+                }
+            } catch (error) {
+                console.log('No hay sesión activa');
+            }
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html>

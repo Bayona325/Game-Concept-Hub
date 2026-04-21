@@ -9,7 +9,9 @@ const appState = {
     currentGame: null,
     currentSection: 'info',
     editingGameId: null,
-    searchQuery: ''
+    searchQuery: '',
+    currentUser: null,
+    isAuthenticated: false
 };
 
 // ===================== ELEMENTOS DEL DOM =====================
@@ -86,24 +88,100 @@ const elements = {
     sectionModalTitle: document.getElementById('sectionModalTitle'),
     
     // Toast
-    toast: document.getElementById('toast')
+    toast: document.getElementById('toast'),
+    
+    // Auth elements
+    btnLogout: document.getElementById('btnLogout'),
+    userInfo: document.getElementById('userInfo'),
+    username: document.getElementById('username')
 };
 
+// ===================== AUTENTICACIÓN =====================
+async function checkAuthentication() {
+    try {
+        const response = await fetch(`${API_AUTH}/me`, {
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            appState.currentUser = data;
+            appState.isAuthenticated = true;
+            
+            // Mostrar info de usuario
+            if (elements.userInfo && elements.username) {
+                elements.userInfo.style.display = 'inline';
+                elements.username.textContent = data.username;
+            }
+            
+            if (elements.btnLogout) {
+                elements.btnLogout.style.display = 'inline-block';
+            }
+            
+            return true;
+        } else {
+            redirectToLogin();
+            return false;
+        }
+    } catch (error) {
+        console.error('Error verificando autenticación:', error);
+        redirectToLogin();
+        return false;
+    }
+}
+
+function redirectToLogin() {
+    if (!window.location.pathname.includes('login')) {
+        window.location.href = '/login.html';
+    }
+}
+
+async function handleLogout() {
+    try {
+        await fetch(`${API_AUTH}/logout`, {
+            method: 'POST',
+            credentials: 'include'
+        });
+        
+        appState.isAuthenticated = false;
+        appState.currentUser = null;
+        showToast('Sesión cerrada exitosamente', 'success');
+        
+        setTimeout(() => {
+            redirectToLogin();
+        }, 1000);
+    } catch (error) {
+        console.error('Error al cerrar sesión:', error);
+        showToast('Error al cerrar sesión', 'error');
+    }
+}
+
 // ===================== INICIALIZACIÓN =====================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     console.log('Game Concept Hub cargado');
-    loadGames();
-    setupEventListeners();
-    handleRouteChange();
     
-    // Escuchar cambios de URL
-    window.addEventListener('hashchange', handleRouteChange);
+    // Verificar autenticación antes de cargar
+    const isAuthenticated = await checkAuthentication();
+    
+    if (isAuthenticated) {
+        loadGames();
+        setupEventListeners();
+        handleRouteChange();
+        
+        // Escuchar cambios de URL
+        window.addEventListener('hashchange', handleRouteChange);
+    }
 });
 
 // ===================== EVENT LISTENERS =====================
 function setupEventListeners() {
     // Búsqueda
     elements.searchInput.addEventListener('input', handleSearch);
+    
+    // Logout
+    if (elements.btnLogout) {
+        elements.btnLogout.addEventListener('click', handleLogout);
+    }
     
     // Crear juego
     elements.btnCreateGame.addEventListener('click', openCreateGameModal);
